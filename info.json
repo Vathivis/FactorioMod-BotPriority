@@ -1,0 +1,11 @@
+{
+	"name": "BotPriority",
+	"version": "1.0.1",
+	"title": "Bot Priority",
+	"author": "Vathivis",
+	"factorio_version": "2.0",
+	"dependencies": [
+		"base >= 2.0.0"
+	],
+	"description": "Prioritize selected ghosts, deconstruction orders, and upgrade orders by temporarily pausing matching work outside the selected area."
+}
