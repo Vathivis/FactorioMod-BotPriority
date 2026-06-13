@@ -1,6 +1,6 @@
 local selection_color = { r = 0.15, g = 0.8, b = 1.0, a = 1.0 }
 local clear_color = { r = 1.0, g = 0.3, b = 0.3, a = 1.0 }
-local highlighted_entity_types = { "entity-ghost" }
+local ignored_entity_types = { "fish" }
 
 data:extend({
 	{
@@ -16,29 +16,29 @@ data:extend({
 			border_color = selection_color,
 			cursor_box_type = "copy",
 			mode = { "any-entity" },
-			entity_filter_mode = "whitelist",
-			entity_type_filters = highlighted_entity_types
+			entity_filter_mode = "blacklist",
+			entity_type_filters = ignored_entity_types
 		},
 		alt_select = {
 			border_color = selection_color,
 			cursor_box_type = "copy",
 			mode = { "any-entity" },
-			entity_filter_mode = "whitelist",
-			entity_type_filters = highlighted_entity_types
+			entity_filter_mode = "blacklist",
+			entity_type_filters = ignored_entity_types
 		},
 		reverse_select = {
 			border_color = clear_color,
 			cursor_box_type = "not-allowed",
 			mode = { "any-entity" },
-			entity_filter_mode = "whitelist",
-			entity_type_filters = highlighted_entity_types
+			entity_filter_mode = "blacklist",
+			entity_type_filters = ignored_entity_types
 		},
 		alt_reverse_select = {
 			border_color = clear_color,
 			cursor_box_type = "not-allowed",
 			mode = { "any-entity" },
-			entity_filter_mode = "whitelist",
-			entity_type_filters = highlighted_entity_types
+			entity_filter_mode = "blacklist",
+			entity_type_filters = ignored_entity_types
 		}
 	}
 })

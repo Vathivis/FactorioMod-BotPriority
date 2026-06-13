@@ -719,16 +719,34 @@ local function process_apply_item(work_item, operation, player)
 	end
 end
 
+local function is_selectable_player_ghost(entity, source_force_name)
+	if not (entity and entity.valid and entity.type == "entity-ghost") then
+		return false
+	end
+
+	if entity.force.name == source_force_name then
+		return true
+	end
+
+	local tag = entity.tags and entity.tags[MOD_TAG]
+	if not tag or tag.original_force_name ~= source_force_name then
+		return false
+	end
+
+	return storage.backlog_forces ~= nil and storage.backlog_forces[entity.force.name] ~= nil
+end
+
 local function selection_has_supported_work(surface, area, source_force_name)
 	local selected_entities = surface.find_entities_filtered({
 		area = area
 	})
 
 	for _, entity in ipairs(selected_entities) do
+		if is_selectable_player_ghost(entity, source_force_name) then
+			return true
+		end
+
 		if entity.force.name == source_force_name then
-			if entity.type == "entity-ghost" then
-				return true
-			end
 
 			if entity.to_be_deconstructed and entity.to_be_deconstructed() then
 				return true
@@ -839,9 +857,15 @@ local function prepare_apply_phase(player, state, operation)
 	end
 
 	if next(ghost_prototypes) ~= nil then
+		local ghost_names = {}
+		for ghost_name in pairs(ghost_prototypes) do
+			ghost_names[#ghost_names + 1] = ghost_name
+		end
+
 		local candidate_ghosts = surface.find_entities_filtered({
 			type = "entity-ghost",
-			force = request.source_force_name
+			force = request.source_force_name,
+			ghost_name = ghost_names
 		})
 
 		for _, ghost in ipairs(candidate_ghosts) do
@@ -1069,6 +1093,33 @@ local function handle_reverse_selected_area(event)
 	end
 
 	start_clear(player)
+end
+
+local function handle_player_deconstructed_area(event)
+	local player = get_player_from_index(event.player_index)
+	if not player or is_cleanup_active() then
+		return
+	end
+
+	local surface = event.surface or player.surface
+	if not surface then
+		return
+	end
+
+	local ghosts = surface.find_entities_filtered({
+		area = event.area,
+		type = "entity-ghost"
+	})
+
+	for _, ghost in ipairs(ghosts) do
+		local tag = ghost.tags and ghost.tags[MOD_TAG]
+		if tag
+			and tag.original_force_name == player.force.name
+			and storage.backlog_forces
+			and storage.backlog_forces[ghost.force.name] then
+			ghost.destroy({ raise_destroy = true })
+		end
+	end
 end
 
 local function build_backlog_cleanup_entries()
@@ -1300,6 +1351,7 @@ script.on_event(defines.events.on_player_selected_area, handle_selected_area)
 script.on_event(defines.events.on_player_alt_selected_area, handle_selected_area)
 script.on_event(defines.events.on_player_reverse_selected_area, handle_reverse_selected_area)
 script.on_event(defines.events.on_player_alt_reverse_selected_area, handle_reverse_selected_area)
+script.on_event(defines.events.on_player_deconstructed_area, handle_player_deconstructed_area)
 
 script.on_event(defines.events.on_tick, function()
 	ensure_storage()

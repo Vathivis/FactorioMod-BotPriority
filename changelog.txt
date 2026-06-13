@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2026-06-13
+  Optimizations:
+    - Reduced priority ghost scanning by filtering candidate ghosts by selected ghost names before Lua-side matching.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2026-03-12
+  Bugfixes:
+    - Allowed reprioritizing ghosts that were already moved to the backlog force.
+    - Allowed deconstruction planners to remove paused backlog ghosts.
+    - Restored working selection highlighting after the ghost-only hover filter broke entity outlines.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2026-03-12
+  Changes:
+    - Added repository thumbnail asset and release packaging updates.
+  Bugfixes:
+    - Preserved the current priority batch when a new selection contains no supported work.
+    - Excluded fish from selection-tool highlighting.
+    - Reverted ghost-only hover filtering after it disabled entity highlighting in practice.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2026-03-10
+  Features:
+    - Added selective priority for entity ghosts, deconstruction orders, and upgrade orders.
+    - Added automatic restore of paused work when prioritized work finishes.
+    - Added safe uninstall cleanup for restoring paused work and merging backlog forces.
+    - Added a custom selection tool shortcut and icon.
+  Info:
+    - Hover highlighting is ghost-oriented only in practice; deconstruction and upgrade priority still work at apply time.
